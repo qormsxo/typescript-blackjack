@@ -5,7 +5,15 @@ class Rule {
         this.betMoney = betMoney;
     }
 
-    jugde(cardNum: number) {}
+    jugde(cardNum: number): Object {
+        if (cardNum > 21) {
+            return { result: "bust" };
+        } else if (cardNum === 21) {
+            return { result: "blackJack" };
+        } else {
+            return { result: "none" };
+        }
+    }
 
     lose(): void {
         this.betMoney = 0;
