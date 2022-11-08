@@ -7,10 +7,14 @@ export class Dealer extends Player {
         super();
     }
 
-    setCards(firstCard: number, sencondCard: number) {
-        this.firstCard = firstCard;
-        this.sencondCard = sencondCard;
-        this.cardNum = firstCard + sencondCard;
+    setCard(newCardNum: number): void {
+        if (!this.firstCard) {
+            this.firstCard = newCardNum;
+        } else {
+            this.sencondCard = newCardNum;
+        }
+        newCardNum = this.is11(this.cardNum, newCardNum);
+        this.cardNum += newCardNum;
     }
 
     getFristCardNum(): number {

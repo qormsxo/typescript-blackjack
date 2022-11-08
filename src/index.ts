@@ -28,8 +28,10 @@ let main = {
             console.log("your Money : ", gamer.getMoney());
             main.bettingMoney(rule, gamer);
 
-            dealer.setCards(card.pop(), card.pop());
-            gamer.setCardNum(card.pop() + card.pop());
+            dealer.setCard(card.pop());
+            dealer.setCard(card.pop());
+            gamer.hit(card.pop());
+            gamer.hit(card.pop());
 
             console.log("Your Card Number : ", gamer.getCardNum());
             console.log(rule.jugde(gamer.getCardNum()));
