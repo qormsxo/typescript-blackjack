@@ -1,4 +1,4 @@
-abstract class Player {
+export abstract class Player {
     protected cardNum = 0;
 
     hit(hitCardNum: number): void {

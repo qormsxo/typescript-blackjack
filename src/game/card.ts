@@ -1,4 +1,4 @@
-class Card {
+export class Card {
     private card: number[] = [];
 
     cardAdd(cardNum: number): void {
@@ -6,6 +6,11 @@ class Card {
     }
 
     pop(): number {
-        return Math.random() * this.card.length + 1;
+        let random: number = Math.random() * this.card.length + 1;
+        return this.card[Math.floor(random)];
+    }
+
+    getCardLength(): number {
+        return this.card.length;
     }
 }

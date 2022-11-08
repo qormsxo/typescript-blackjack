@@ -1,4 +1,4 @@
-class Rule {
+export class Rule {
     private betMoney = 0;
 
     setBetMoney(betMoney: number) {

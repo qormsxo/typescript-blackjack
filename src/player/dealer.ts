@@ -1,11 +1,19 @@
-class Dealer extends Player {
-    private firstCard: number;
-    private sencondCard: number;
+import { Player } from "./player";
+export class Dealer extends Player {
+    private firstCard: number = 0;
+    private sencondCard: number = 0;
 
-    constructor(firstCard: number, sencondCard: number) {
+    constructor() {
         super();
+    }
+
+    setCards(firstCard: number, sencondCard: number) {
         this.firstCard = firstCard;
         this.sencondCard = sencondCard;
         this.cardNum = firstCard + sencondCard;
+    }
+
+    getFristCardNum(): number {
+        return this.firstCard;
     }
 }
