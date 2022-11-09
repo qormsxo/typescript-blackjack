@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES2016", // 트랜스파일할 자바스크립트 버전.
-        "lib": ["es5", "es6", "es7", "esnext"],
+        "lib": ["es5", "es6", "es7", "esnext", "DOM"],
         "allowJs": true, // JS파일들 TS에서 import해서 쓸 수 있게 해줌.
         "skipLibCheck": true, // 선언파일의 형식 검사를 스킵. -> 정확성은 떨어지지만 그만큼 시간을 절약.
         "esModuleInterop": true, // export default가 없는 라이브러리도 * as없이 import 가능.
@@ -11,7 +11,8 @@
         "module": "commonjs", // 어떤 import 문법을 적용할건지.
         "moduleResolution": "node", // import가 무엇을 참조하는지 확인.
         "outDir": "dist",
-        "resolveJsonModule": true // 정적으로 json가져오기.
+        "resolveJsonModule": true, // 정적으로 json가져오기.
+        "sourceMap": true
     },
     "include": ["src"], // 컴파일대상 포함.
     "exclude": ["node_modules"] // 컴파일대상 제외.

@@ -1,8 +1,12 @@
 import { PlayerInterface } from "./interface";
 
 export class Player implements PlayerInterface {
-    cardNum: number = 0;
+    protected cardNum: number = 0;
 
+    // 게임이 끝났을때 카드 초기화
+    cardReset(): void {
+        this.cardNum = 0;
+    }
     hit(hitCardNum: number): void {
         hitCardNum = this.is11(this.cardNum, hitCardNum);
         this.cardNum += hitCardNum;

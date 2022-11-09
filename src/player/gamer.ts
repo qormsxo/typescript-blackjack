@@ -13,11 +13,11 @@ export class Gamer extends Player {
     bet(betMoney: number): void {
         this.money -= betMoney;
     }
-    setCardNum(cardNum: number): void {
-        this.cardNum = cardNum;
-    }
 
     getMoney(): number {
         return this.money;
+    }
+    showCard(): void {
+        console.log("Your Card Number : ", this.getCardNum());
     }
 }

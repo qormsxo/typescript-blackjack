@@ -1,27 +1,50 @@
+type result = {
+    BUST: number;
+    NONE: number;
+    BLACKJACK: number;
+};
+
+const RESULT: result = {
+    BUST: 0,
+    NONE: 1,
+    BLACKJACK: 2,
+};
+
 export class Rule {
     private betMoney = 0;
 
-    setBetMoney(betMoney: number) {
+    public setBetMoney(betMoney: number) {
         this.betMoney = betMoney;
     }
 
-    jugde(cardNum: number): Object {
+    public jugde(cardNum: number): number {
         if (cardNum > 21) {
-            return { result: "bust" };
+            return RESULT.BUST;
         } else if (cardNum === 21) {
-            return { result: "blackJack" };
+            return RESULT.BLACKJACK;
         } else {
-            return { result: "none" };
+            return RESULT.NONE;
         }
     }
+    public winloss = {
+        win: this.win,
+        blackJack: this.blackjack,
+        draw: this.draw,
+        lose: this.lose,
+    };
 
-    lose(): void {
+    private lose(): number {
         this.betMoney = 0;
+        return 0;
     }
-    win(): number {
+    private win(): number {
+        console.log(this.betMoney * 2);
         return this.betMoney * 2;
     }
-    blackjack(): number {
+    private draw(): number {
+        return this.betMoney;
+    }
+    private blackjack(): number {
         return this.betMoney * 1.5;
     }
 }

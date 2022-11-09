@@ -7,6 +7,7 @@ export class Dealer extends Player {
         super();
     }
 
+    // 처음에만
     setCard(newCardNum: number): void {
         if (!this.firstCard) {
             this.firstCard = newCardNum;
@@ -19,5 +20,8 @@ export class Dealer extends Player {
 
     getFristCardNum(): number {
         return this.firstCard;
+    }
+    showCard(): void {
+        console.log("Dealer Card Number : ", this.getCardNum());
     }
 }
