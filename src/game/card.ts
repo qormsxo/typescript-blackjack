@@ -7,7 +7,6 @@ export class Card {
 
     pop(): number {
         let random: number = Math.floor(Math.random() * this.card.length + 1);
-        console.log("cardindex : ", random);
         let returnNum = this.card[random];
         this.card.splice(random, 1);
         return returnNum;

@@ -10,10 +10,17 @@ const RESULT: result = {
     BLACKJACK: 2,
 };
 
-export class Rule {
-    private betMoney = 0;
+type winloss = {
+    win: () => number;
+    blackJack: () => number;
+    draw: () => number;
+    lose: () => number;
+};
 
-    public setBetMoney(betMoney: number) {
+export class Rule {
+    private betMoney: number = 0;
+
+    public setBetMoney(betMoney: number): void {
         this.betMoney = betMoney;
     }
 
@@ -26,25 +33,18 @@ export class Rule {
             return RESULT.NONE;
         }
     }
-    public winloss = {
-        win: this.win,
-        blackJack: this.blackjack,
-        draw: this.draw,
-        lose: this.lose,
-    };
 
-    private lose(): number {
+    public lose(): number {
         this.betMoney = 0;
         return 0;
     }
-    private win(): number {
-        console.log(this.betMoney * 2);
+    public win(): number {
         return this.betMoney * 2;
     }
-    private draw(): number {
+    public draw(): number {
         return this.betMoney;
     }
-    private blackjack(): number {
+    public blackjack(): number {
         return this.betMoney * 1.5;
     }
 }

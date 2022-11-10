@@ -42,11 +42,9 @@ let main = {
             gamer.hit(card.pop());
 
             result = main.firstJugde(gamer.getCardNum(), dealer.getCardNum(), rule);
-            if (result === "continue") {
-                console.log("Dealer First Card Number", dealer.getFristCardNum());
-            } else {
+            if (result !== "continue") {
                 dealer.showCard();
-                gamer.setMoney(gamer.getMoney() + rule.winloss[result]()); // 결과에 따라 리턴 값 더하기 지면 0을 더함
+                gamer.setMoney(gamer.getMoney() + main.resultfun(rule, result)); // 결과에 따라 리턴 값 더하기 지면 0을 더함
                 continue main;
             }
 
@@ -54,21 +52,25 @@ let main = {
             gameWhile: while (!isStand.dealerStand || !isStand.gamerStand) {
                 gamer.showCard();
                 dealer.showCard();
-                input = parseInt(readline.keyIn("1.hit 2.stand ", { limit: "$<1-2>" }));
-                if (input == 1) {
-                    console.log("hit");
-                    gamer.hit(card.pop());
-                    // 히트를 했는데 버스트 났음
-                    if (!rule.jugde(gamer.getCardNum())) {
-                        console.log("Bust");
-                        gamer.showCard();
-                        gamer.setMoney(gamer.getMoney() + rule.winloss.lose());
-                        continue main;
-                        // break gameWhile; 이게 맞나 싶긴해
+
+                if (!isStand.gamerStand) {
+                    input = parseInt(readline.keyIn("1.hit 2.stand ", { limit: "$<1-2>" }));
+                    if (input == 1) {
+                        console.log("hit");
+                        gamer.hit(card.pop());
+                        // 히트를 했는데 버스트 났음
+                        if (!rule.jugde(gamer.getCardNum())) {
+                            console.log("Bust");
+                            gamer.showCard();
+                            gamer.setMoney(gamer.getMoney() + rule.lose());
+                            continue main;
+                            // break gameWhile; 이게 맞나 싶긴해
+                        }
+                    } else {
+                        isStand.gamerStand = gamer.stand();
                     }
-                } else {
-                    isStand.gamerStand = gamer.stand();
                 }
+
                 if (dealer.getCardNum() < 17) {
                     // 딜러는 16이하면 무조건 히트
                     console.log("dealer hit");
@@ -77,7 +79,7 @@ let main = {
                         console.log("dealer Bust");
                         gamer.showCard();
                         dealer.showCard();
-                        gamer.setMoney(gamer.getMoney() + rule.winloss.win());
+                        gamer.setMoney(gamer.getMoney() + rule.win());
                         continue main;
                     }
                 } else {
@@ -86,7 +88,7 @@ let main = {
                 }
             }
             result = main.judge(gamer.getCardNum(), dealer.getCardNum());
-            if (result != "continue") gamer.setMoney(gamer.getMoney() + rule.winloss[result]());
+            if (result != "continue") gamer.setMoney(gamer.getMoney() + main.resultfun(rule, result));
         }
     },
     reset: (gamer: Gamer, dealer: Dealer, rule: Rule, isStand: isStand): void => {
@@ -161,6 +163,25 @@ let main = {
         }
         rule.setBetMoney(betInput);
         gamer.bet(betInput);
+    },
+    delay: (ms: number) => {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    },
+    resultfun: (rule: Rule, result: result): number => {
+        switch (result) {
+            case "blackJack":
+                return rule.blackjack();
+                break;
+            case "draw":
+                return rule.draw();
+                break;
+            case "win":
+                return rule.win();
+            case "lose":
+                return rule.lose();
+            case "continue":
+                throw new Error("진짜 말도안되는 에러");
+        }
     },
 };
 
