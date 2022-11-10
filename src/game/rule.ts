@@ -1,20 +1,13 @@
-type result = {
+type jugdeResult = {
     BUST: number;
     NONE: number;
     BLACKJACK: number;
 };
 
-const RESULT: result = {
+const JUGDERESULT: jugdeResult = {
     BUST: 0,
     NONE: 1,
     BLACKJACK: 2,
-};
-
-type winloss = {
-    win: () => number;
-    blackJack: () => number;
-    draw: () => number;
-    lose: () => number;
 };
 
 export class Rule {
@@ -26,11 +19,11 @@ export class Rule {
 
     public jugde(cardNum: number): number {
         if (cardNum > 21) {
-            return RESULT.BUST;
+            return JUGDERESULT.BUST;
         } else if (cardNum === 21) {
-            return RESULT.BLACKJACK;
+            return JUGDERESULT.BLACKJACK;
         } else {
-            return RESULT.NONE;
+            return JUGDERESULT.NONE;
         }
     }
 

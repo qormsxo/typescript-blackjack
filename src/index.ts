@@ -1,11 +1,11 @@
 import { Card } from "./game/card";
 import { Rule } from "./game/rule";
 import { Dealer } from "./player/dealer";
-import { Gamer } from "./player/gamer";
+import { Player } from "./player/player";
 import * as readline from "readline-sync";
 type result = "blackJack" | "draw" | "win" | "lose" | "continue";
 type isStand = {
-    gamerStand: boolean;
+    playerStand: boolean;
     dealerStand: boolean;
 };
 
@@ -13,12 +13,12 @@ let main = {
     game: () => {
         let card: Card = new Card(); // 카드 객체 생성
 
-        let gamer: Gamer = new Gamer();
+        let player: Player = new Player(10000);
         let dealer: Dealer = new Dealer();
         let rule: Rule = new Rule();
         let result: result;
         let isStand: isStand = {
-            gamerStand: false,
+            playerStand: false,
             dealerStand: false,
         };
         console.log("Black Jack");
@@ -27,47 +27,47 @@ let main = {
         readline.question("");
         main: while (true) {
             // 겜시작 전에 전부 초기화
-            main.reset(gamer, dealer, rule, isStand);
+            main.reset(player, dealer, rule, isStand);
             // 카드가 2개 이하가 되면 다시 덱 추가
             if (card.getCardLength() < 2) {
                 main.createCardDeck(card);
             }
-            console.log("your Money : ", gamer.getMoney());
+            console.log("your Money : ", player.getMoney());
             // 베팅
-            main.bettingMoney(rule, gamer);
+            main.bettingMoney(rule, player);
 
             dealer.setCard(card.pop());
             dealer.setCard(card.pop());
-            gamer.hit(card.pop());
-            gamer.hit(card.pop());
+            player.hit(card.pop());
+            player.hit(card.pop());
 
-            result = main.firstJugde(gamer.getCardNum(), dealer.getCardNum(), rule);
+            result = main.firstJugde(player.getCardNum(), dealer.getCardNum(), rule);
             if (result !== "continue") {
                 dealer.showCard();
-                gamer.setMoney(gamer.getMoney() + main.resultfun(rule, result)); // 결과에 따라 리턴 값 더하기 지면 0을 더함
+                player.setMoney(player.getMoney() + main.resultfun(rule, result)); // 결과에 따라 리턴 값 더하기 지면 0을 더함
                 continue main;
             }
 
             let input: number = 1;
-            gameWhile: while (!isStand.dealerStand || !isStand.gamerStand) {
-                gamer.showCard();
+            gameWhile: while (!isStand.dealerStand || !isStand.playerStand) {
+                player.showCard();
                 dealer.showCard();
 
-                if (!isStand.gamerStand) {
+                if (!isStand.playerStand) {
                     input = parseInt(readline.keyIn("1.hit 2.stand ", { limit: "$<1-2>" }));
                     if (input == 1) {
                         console.log("hit");
-                        gamer.hit(card.pop());
+                        player.hit(card.pop());
                         // 히트를 했는데 버스트 났음
-                        if (!rule.jugde(gamer.getCardNum())) {
+                        if (!rule.jugde(player.getCardNum())) {
                             console.log("Bust");
-                            gamer.showCard();
-                            gamer.setMoney(gamer.getMoney() + rule.lose());
+                            player.showCard();
+                            player.setMoney(player.getMoney() + rule.lose());
                             continue main;
                             // break gameWhile; 이게 맞나 싶긴해
                         }
                     } else {
-                        isStand.gamerStand = gamer.stand();
+                        isStand.playerStand = player.stand();
                     }
                 }
 
@@ -77,9 +77,9 @@ let main = {
                     dealer.hit(card.pop());
                     if (!rule.jugde(dealer.getCardNum())) {
                         console.log("dealer Bust");
-                        gamer.showCard();
+                        player.showCard();
                         dealer.showCard();
-                        gamer.setMoney(gamer.getMoney() + rule.win());
+                        player.setMoney(player.getMoney() + rule.win());
                         continue main;
                     }
                 } else {
@@ -87,19 +87,19 @@ let main = {
                     isStand.dealerStand = dealer.stand();
                 }
             }
-            result = main.judge(gamer.getCardNum(), dealer.getCardNum());
-            if (result != "continue") gamer.setMoney(gamer.getMoney() + main.resultfun(rule, result));
+            result = main.judge(player.getCardNum(), dealer.getCardNum());
+            if (result != "continue") player.setMoney(player.getMoney() + main.resultfun(rule, result));
         }
     },
-    reset: (gamer: Gamer, dealer: Dealer, rule: Rule, isStand: isStand): void => {
-        gamer.cardReset();
+    reset: (player: Player, dealer: Dealer, rule: Rule, isStand: isStand): void => {
+        player.cardReset();
         rule.setBetMoney(0);
         dealer.cardReset();
         isStand.dealerStand = false;
-        isStand.gamerStand = false;
+        isStand.playerStand = false;
     },
-    firstJugde: (gamerCardNum: number, delalerCardNum: number, rule: Rule): result => {
-        let gamerResult = rule.jugde(gamerCardNum);
+    firstJugde: (playerCardNum: number, delalerCardNum: number, rule: Rule): result => {
+        let gamerResult = rule.jugde(playerCardNum);
         let dealerResult = rule.jugde(delalerCardNum);
         if (gamerResult > dealerResult) {
             console.log("blackJack!");
@@ -111,11 +111,11 @@ let main = {
             return "continue";
         }
     },
-    judge: (gamerCardNum: number, delalerCardNum: number): result => {
-        if (gamerCardNum > delalerCardNum) {
+    judge: (playerCardNum: number, delalerCardNum: number): result => {
+        if (playerCardNum > delalerCardNum) {
             console.log("win!");
             return "win";
-        } else if (gamerCardNum === delalerCardNum) {
+        } else if (playerCardNum === delalerCardNum) {
             console.log("draw");
             return "draw";
         } else {
@@ -123,7 +123,7 @@ let main = {
             return "lose";
         }
     },
-    createCardDeck: (card: Card) => {
+    createCardDeck: (card: Card): void => {
         // 제너레이터
         let createNum = function* () {
             let i: number = 1;
@@ -152,7 +152,7 @@ let main = {
     },
 
     // 돈 베팅
-    bettingMoney: (rule: Rule, gamer: Gamer): void => {
+    bettingMoney: (rule: Rule, player: Player): void => {
         let betInput: number;
         while (true) {
             betInput = readline.questionInt("plz betMoney (100 units)");
@@ -162,7 +162,7 @@ let main = {
             console.log("Betting money must be 100 units");
         }
         rule.setBetMoney(betInput);
-        gamer.bet(betInput);
+        player.bet(betInput);
     },
     delay: (ms: number) => {
         return new Promise((resolve) => setTimeout(resolve, ms));

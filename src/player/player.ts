@@ -1,9 +1,28 @@
-import { PlayerInterface } from "./interface";
+// import { Player } from './player';
+import { User } from "./interface";
 
-export class Player implements PlayerInterface {
-    protected cardNum: number = 0;
+export class Player implements User {
+    private money: number;
+    private cardNum: number = 0;
+    constructor(money: number) {
+        this.money = money;
+    }
 
-    // 게임이 끝났을때 카드 초기화
+    setMoney(money: number): void {
+        this.money = money;
+    }
+
+    bet(betMoney: number): void {
+        this.money -= betMoney;
+    }
+
+    getMoney(): number {
+        return this.money;
+    }
+    showCard(): void {
+        console.log("Your Card Number : ", this.getCardNum());
+    }
+
     cardReset(): void {
         this.cardNum = 0;
     }
@@ -13,7 +32,7 @@ export class Player implements PlayerInterface {
     }
 
     is11(currCardNum: number, newCardNum: number): number {
-        // 1을 11로 바꿔도 버스트가 나지 않을때
+        // 1을 11로 바꿔도 버스트가 나지 않을때 (A 는 1 아님 11임)
         if (newCardNum === 1 && currCardNum + 11 <= 21) {
             console.log("1을 11로 변환");
             return 11;
