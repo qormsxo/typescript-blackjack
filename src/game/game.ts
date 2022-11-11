@@ -9,17 +9,15 @@ type isStand = {
     dealerStand: boolean;
 };
 class Game {
-    private card: Card;
     private player: Player;
     private rule: Rule;
     private dealer: Dealer;
 
-    constructor(card: Card, player: Player, dealer: Dealer, rule: Rule) {
-        this.card = card;
+    constructor(player: Player, dealer: Dealer, rule: Rule) {
         this.player = player;
         this.dealer = dealer;
         this.rule = rule;
     }
 
-    public play() {}
+    public play() { }
 }
