@@ -4,6 +4,9 @@ import { User } from "./interface";
 export class Player implements User {
     private money: number;
     private cardNum: number = 0;
+
+    private isStand: boolean = false;
+
     constructor(money: number) {
         this.money = money;
     }
@@ -23,8 +26,9 @@ export class Player implements User {
         console.log("Your Card Number : ", this.getCardNum());
     }
 
-    cardReset(): void {
+    reset(): void {
         this.cardNum = 0;
+        this.isStand = false;
     }
     hit(hitCardNum: number): void {
         hitCardNum = this.is11(this.cardNum, hitCardNum);
@@ -41,8 +45,12 @@ export class Player implements User {
         }
     }
 
-    stand(): boolean {
-        return true;
+    getStand(): boolean {
+        return this.isStand;
+    }
+
+    stand(): void {
+        this.isStand = true;
     }
 
     getCardNum(): number {

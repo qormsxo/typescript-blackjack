@@ -1,11 +1,13 @@
 export interface User {
     hit(hitCardNum: number): void;
 
-    stand(): boolean;
+    stand(): void;
 
     getCardNum(): number;
 
-    cardReset(): void;
+    reset(): void;
+
+    getStand(): boolean;
 
     is11(currCardNum: number, newCardNum: number): number;
 

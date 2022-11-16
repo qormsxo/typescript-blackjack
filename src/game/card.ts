@@ -1,10 +1,6 @@
 export class Card {
     private card: number[] = [];
 
-    cardAdd(cardNum: number): void {
-        this.card.push(cardNum);
-    }
-
     pop(): number {
         let random: number = Math.floor(Math.random() * this.card.length + 1);
         let returnNum = this.card[random];
@@ -12,11 +8,13 @@ export class Card {
         return returnNum;
     }
 
-    getCardLength(): number {
-        return this.card.length;
+    public cardCreate(): void {
+        if (this.card.length < 2) {
+            this.createCardDeck();
+        }
     }
 
-    private createCardDeck(card: Card) {
+    private createCardDeck() {
         // 제너레이터
         let createNum = function* () {
             let i: number = 1;
@@ -39,7 +37,7 @@ export class Card {
         for (let i = 0; i < 3; i++) {
             let iterator = createNum();
             for (let value of iterator) {
-                card.cardAdd(value);
+                this.card.push(value);
             }
         }
     }

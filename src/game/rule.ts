@@ -10,6 +10,8 @@ const JUGDERESULT: jugdeResult = {
     BLACKJACK: 2,
 };
 
+type result = "blackJack" | "draw" | "win" | "lose" | "nothing";
+
 export class Rule {
     private betMoney: number = 0;
 
@@ -24,6 +26,21 @@ export class Rule {
             return JUGDERESULT.BLACKJACK;
         } else {
             return JUGDERESULT.NONE;
+        }
+    }
+
+    resultfun(result: result): number {
+        switch (result) {
+            case "blackJack":
+                return this.blackjack();
+            case "draw":
+                return this.draw();
+            case "win":
+                return this.win();
+            case "lose":
+                return this.lose();
+            case "nothing":
+                throw new Error("진짜 말도안되는 에러");
         }
     }
 

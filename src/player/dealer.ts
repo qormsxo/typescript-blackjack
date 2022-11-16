@@ -4,6 +4,9 @@ export class Dealer implements User {
     private firstCard: number = 0;
     private sencondCard: number = 0;
     protected cardNum: number = 0;
+
+    private isStand: boolean = false;
+
     // 처음에만
     setCard(newCardNum: number): void {
         if (!this.firstCard) {
@@ -23,8 +26,10 @@ export class Dealer implements User {
         console.log("Dealer Card Number : ", this.getCardNum());
     }
 
-    cardReset(): void {
+    reset(): void {
         this.cardNum = 0;
+        this.firstCard = 0;
+        this.sencondCard = 0;
     }
     hit(hitCardNum: number): void {
         hitCardNum = this.is11(this.cardNum, hitCardNum);
@@ -41,8 +46,11 @@ export class Dealer implements User {
         }
     }
 
-    stand(): boolean {
-        return true;
+    stand(): void {
+        this.isStand = true;
+    }
+    getStand(): boolean {
+        return this.isStand;
     }
 
     getCardNum(): number {
