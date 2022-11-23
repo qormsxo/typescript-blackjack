@@ -10,10 +10,10 @@ type isStand = {
 };
 class Game {
     public play() {
-        let card: Card = new Card();
-        let player: Player = new Player(10000);
-        let dealer: Dealer = new Dealer();
-        let rule: Rule = new Rule();
+        let card: Card = new Card(new Array());
+        let player: Player = new Player(10000, 0, false);
+        let dealer: Dealer = new Dealer(0, 0, 0, false);
+        let rule: Rule = new Rule(0);
 
         console.log("Black Jack");
         console.log("Press any key to continue...");

@@ -3,12 +3,14 @@ import { User } from "./interface";
 
 export class Player implements User {
     private money: number;
-    private cardNum: number = 0;
+    private cardNum: number;
 
-    private isStand: boolean = false;
+    private isStand: boolean;
 
-    constructor(money: number) {
+    constructor(money: number, cardNum: number, isStand: boolean) {
         this.money = money;
+        this.cardNum = cardNum;
+        this.isStand = isStand;
     }
 
     setMoney(money: number): void {

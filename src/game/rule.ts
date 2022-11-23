@@ -15,6 +15,10 @@ type result = "blackJack" | "draw" | "win" | "lose" | "nothing";
 export class Rule {
     private betMoney: number = 0;
 
+    constructor(betMoney: number) {
+        this.betMoney = betMoney;
+    }
+
     public setBetMoney(betMoney: number): void {
         this.betMoney = betMoney;
     }

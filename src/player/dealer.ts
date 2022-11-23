@@ -1,11 +1,18 @@
 // import { Player } from "./player";
 import { User } from "./interface";
 export class Dealer implements User {
-    private firstCard: number = 0;
-    private sencondCard: number = 0;
-    protected cardNum: number = 0;
+    private firstCard: number;
+    private sencondCard: number;
+    protected cardNum: number;
 
-    private isStand: boolean = false;
+    private isStand: boolean;
+
+    constructor(firstCard: number, sencondCard: number, cardNum: number, isStand: boolean) {
+        this.firstCard = firstCard;
+        this.sencondCard = sencondCard;
+        this.cardNum = cardNum;
+        this.isStand = isStand;
+    }
 
     // 처음에만
     setCard(newCardNum: number): void {

@@ -1,5 +1,9 @@
 export class Card {
-    private card: number[] = [];
+    private card: number[];
+
+    constructor(card: number[]) {
+        this.card = card;
+    }
 
     pop(): number {
         let random: number = Math.floor(Math.random() * this.card.length + 1);
@@ -14,7 +18,6 @@ export class Card {
         }
     }
 
-
     private createCardDeck() {
         // 제너레이터
         // 3벌로 카드 덱만들기
@@ -25,7 +28,7 @@ export class Card {
             }
         }
     }
-    private * createNum() {
+    private *createNum() {
         let i: number = 1;
         let count: number = 0;
         //조커를 제외한 52장
@@ -41,6 +44,5 @@ export class Card {
             }
         }
         return 0;
-    };
-
+    }
 }
