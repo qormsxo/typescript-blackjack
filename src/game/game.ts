@@ -9,11 +9,19 @@ type isStand = {
     dealerStand: boolean;
 };
 class Game {
+    private card: Card;
+    private player: Player;
+    private dealer: Dealer;
+    private rule: Rule;
+    private readonly hitInput :number = 1
+    constructor(){
+        this.card= new Card(new Array());
+        this.player = new Player(10000, 0, false);
+        this.dealer = new Dealer(0, 0, 0, false);
+        this.rule = new Rule(0);
+    }
+
     public play() {
-        let card: Card = new Card(new Array());
-        let player: Player = new Player(10000, 0, false);
-        let dealer: Dealer = new Dealer(0, 0, 0, false);
-        let rule: Rule = new Rule(0);
 
         console.log("Black Jack");
         console.log("Press any key to continue...");
@@ -21,101 +29,103 @@ class Game {
         readline.question("");
 
         main: while (true) {
-            this.reset(player, dealer, rule); // 시작전에 리셋
-            card.cardCreate(); // 카드덱 만들기
-            this.bettingMoney(player, rule); //베팅하기
-            let result: result = this.firstReceive(player, dealer, rule, card);
+            console.log("\n")
+            // 시작 전에 리셋 
+            this.player.reset();
+            this.rule.setBetMoney(0);
+            this.dealer.reset();
+            
+            this.card.cardCreate(); 
+            this.bettingMoney(); 
+            this.cardReceive();
+            let result: result = this.firstJugde()
             if (result !== "nothing") {
-                dealer.showCard();
-                player.showCard();
-                player.setMoney(player.getMoney() + rule.resultfun(result));
+                this.dealer.showCard();
+                this.player.showCard();
+                this.player.setMoney(this.player.getMoney() + this.rule.resultfun(result));
                 continue main;
             }
-            result = this.mainGame(player, dealer, rule, card);
-            player.setMoney(player.getMoney() + rule.resultfun(result));
+            result = this.mainGame();
+            this.player.setMoney(this.player.getMoney() + this.rule.resultfun(result));
         }
     }
 
-    private bettingMoney(player: Player, rule: Rule): void {
-        console.log("Your Money : " + player.getMoney());
+    private bettingMoney(): void {
+        console.log("Your Money : " + this.player.getMoney());
         while (true) {
-            let betInput: number = readline.questionInt("plz betMoney (100 units)");
+            let betInput: number = readline.questionInt("plz betting Money (100 units)");
             if (betInput % 100 === 0) {
-                rule.setBetMoney(betInput);
-                player.bet(betInput);
+                this.rule.setBetMoney(betInput);
+                this.player.bet(betInput);
                 break;
             }
             console.log("Betting money must be 100 units");
         }
     }
 
-    private firstReceive(player: Player, dealer: Dealer, rule: Rule, card: Card): result {
-        player.hit(card.pop());
-        player.hit(card.pop());
-        dealer.setCard(card.pop());
-        dealer.setCard(card.pop());
-
-        let gamerResult = rule.jugde(player.getCardNum());
-        let dealerResult = rule.jugde(dealer.getCardNum());
+    private cardReceive() : void{
+        this.player.hit(this.card.pop());
+        this.player.hit(this.card.pop());
+        this.dealer.setCard(this.card.pop());
+        this.dealer.setCard(this.card.pop());
+    }
+    // 처음으로 카드를 받았을때 의 판정
+    private firstJugde(): result {
+        let gamerResult = this.rule.jugde(this.player.getCardNum());
+        let dealerResult = this.rule.jugde(this.dealer.getCardNum());
+        let firstResult:result;
         if (gamerResult > dealerResult) {
             console.log("blackJack!");
-            return "blackJack";
+            firstResult =  "blackJack";
         } else if (gamerResult > 1 && dealerResult > 1) {
             console.log("draw");
-            return "draw";
+            firstResult =  "draw";
         } else {
-            return "nothing";
+            firstResult = "nothing";
         }
+        return firstResult
     }
 
-    reset(player: Player, dealer: Dealer, rule: Rule): void {
-        player.reset();
-        rule.setBetMoney(0);
-        dealer.reset();
-    }
+    private mainGame(): result {
+        while (!this.player.isStand() || !this.dealer.isStand()) {
+            this.player.showCard();
+            this.dealer.showCard();
 
-    private mainGame(player: Player, dealer: Dealer, rule: Rule, card: Card): result {
-        while (!player.getStand() || !dealer.getStand()) {
-            player.showCard();
-            dealer.showCard();
-            if (!player.getStand()) {
-                let input: number = parseInt(readline.keyIn("1.hit 2.stand ", { limit: "$<1-2>" }));
-                if (input == 1) {
-                    console.log("hit");
-                    player.hit(card.pop());
-                    // 히트를 했는데 버스트 났음
-                    if (!rule.jugde(player.getCardNum())) {
-                        console.log("Bust");
-                        player.showCard();
-                        return "lose";
-                        break;
-                    }
-                } else {
-                    // 스탠드
-                    player.stand();
+            let playerChoice: number = this.player.userChoice();
+            if (playerChoice === this.hitInput) {
+                console.log("hit");
+                this.player.hit(this.card.pop());
+                // 히트를 했는데 버스트 났음
+                if (!this.rule.jugde(this.player.getCardNum())) {
+                    console.log("Bust");
+                    this.player.showCard();
+                    return "lose";
                 }
+            } else {
+                // 스탠드
+                this.player.doStand();
             }
-            if (!dealer.getStand()) {
-                if (dealer.getCardNum() < 17) {
-                    // 딜러는 16이하면 무조건 히트
-                    console.log("Dealer hit");
-                    dealer.hit(card.pop());
-                    if (!rule.jugde(dealer.getCardNum())) {
-                        console.log("Dealer Bust");
-                        player.showCard();
-                        dealer.showCard();
-                        return "win";
-                        break;
-                    }
-                } else {
-                    console.log("Dealer stand");
-                    dealer.stand();
+
+            let dealerChoice:number = this.dealer.userChoice();
+            if (dealerChoice === this.hitInput) {
+                // 딜러는 16이하면 무조건 히트
+                console.log("Dealer hit");
+                this.dealer.hit(this.card.pop());
+                if (!this.rule.jugde(this.dealer.getCardNum())) {
+                    console.log("Dealer Bust");
+                    this.player.showCard();
+                    this.dealer.showCard();
+                    return "win";
                 }
+            } else {
+                console.log("Dealer stand");
+                this.dealer.doStand();
             }
+            
         }
-        player.showCard();
-        dealer.showCard();
-        return player.getCardNum() > dealer.getCardNum() ? "win" : player.getCardNum() === dealer.getCardNum() ? "draw" : "lose";
+        this.player.showCard();
+        this.dealer.showCard();
+        return this.player.getCardNum() > this.dealer.getCardNum() ? "win" : this.player.getCardNum() === this.dealer.getCardNum() ? "draw" : "lose";
     }
 }
 

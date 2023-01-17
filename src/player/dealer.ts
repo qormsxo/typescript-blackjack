@@ -5,13 +5,28 @@ export class Dealer implements User {
     private sencondCard: number;
     protected cardNum: number;
 
-    private isStand: boolean;
+    private stand: boolean;
 
-    constructor(firstCard: number, sencondCard: number, cardNum: number, isStand: boolean) {
+    constructor(firstCard: number, sencondCard: number, cardNum: number, stand: boolean) {
         this.firstCard = firstCard;
         this.sencondCard = sencondCard;
         this.cardNum = cardNum;
-        this.isStand = isStand;
+        this.stand = stand;
+    }
+    userChoice(): number {
+        let choiceNumber : number;
+        if (!this.isStand()) {
+            if (this.getCardNum() < 17) {
+                // 딜러는 16이하면 무조건 히트
+                choiceNumber = 1;
+            } else {
+                console.log("Dealer stand");
+                choiceNumber =2
+            }
+        }else{
+            choiceNumber=2
+        }
+        return choiceNumber
     }
 
     // 처음에만
@@ -53,11 +68,11 @@ export class Dealer implements User {
         }
     }
 
-    stand(): void {
-        this.isStand = true;
+    doStand(): void {
+        this.stand = true;
     }
-    getStand(): boolean {
-        return this.isStand;
+    isStand(): boolean {
+        return this.stand;
     }
 
     getCardNum(): number {

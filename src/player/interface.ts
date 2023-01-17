@@ -1,15 +1,17 @@
 export interface User {
     hit(hitCardNum: number): void;
 
-    stand(): void;
+    doStand(): void;
 
     getCardNum(): number;
 
     reset(): void;
 
-    getStand(): boolean;
+    isStand(): boolean;
 
     is11(currCardNum: number, newCardNum: number): number;
 
     showCard(): void;
+
+    userChoice():number;
 }

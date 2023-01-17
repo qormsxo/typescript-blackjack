@@ -1,16 +1,26 @@
 // import { Player } from './player';
 import { User } from "./interface";
-
+import * as readline from "readline-sync";
 export class Player implements User {
     private money: number;
     private cardNum: number;
 
-    private isStand: boolean;
+    private stand: boolean;
 
-    constructor(money: number, cardNum: number, isStand: boolean) {
+    constructor(money: number, cardNum: number, stand: boolean) {
         this.money = money;
         this.cardNum = cardNum;
-        this.isStand = isStand;
+        this.stand = stand;
+    }
+    userChoice(): number {
+        let input: number;
+        if (!this.isStand()) {
+            input = parseInt(readline.keyIn("1.hit 2.stand ", { limit: "$<1-2>" }));
+        }else{
+            input = 2;
+        }
+        return input;
+        
     }
 
     setMoney(money: number): void {
@@ -24,18 +34,16 @@ export class Player implements User {
     getMoney(): number {
         return this.money;
     }
+    
     showCard(): void {
         console.log("Your Card Number : ", this.getCardNum());
     }
 
     reset(): void {
         this.cardNum = 0;
-        this.isStand = false;
+        this.stand = false;
     }
-    hit(hitCardNum: number): void {
-        hitCardNum = this.is11(this.cardNum, hitCardNum);
-        this.cardNum += hitCardNum;
-    }
+
 
     is11(currCardNum: number, newCardNum: number): number {
         // 1을 11로 바꿔도 버스트가 나지 않을때 (A 는 1 아님 11임)
@@ -47,12 +55,17 @@ export class Player implements User {
         }
     }
 
-    getStand(): boolean {
-        return this.isStand;
+    isStand(): boolean {
+        return this.stand;
     }
 
-    stand(): void {
-        this.isStand = true;
+    doStand(): void {
+        this.stand = true;
+    }
+
+    hit(hitCardNum: number): void {
+        hitCardNum = this.is11(this.cardNum, hitCardNum);
+        this.cardNum += hitCardNum;
     }
 
     getCardNum(): number {
